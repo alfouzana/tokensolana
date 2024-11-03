@@ -6,12 +6,9 @@ const Banner = () => {
       <div className="wide-bg">
         <div className="app-desc max-width">
           <div className="text">
-            <h2>Revolutionizing Value: Fair Fees for the Web3.Tools Era</h2>
+            <h2>Revolutionizing the internet</h2>
             <p>
-              At Web3.Tools, we believe in creating a transparent and equitable
-              ecosystem for all users. Our innovative pricing structure is
-              designed to align with the decentralized ethos of Web3, ensuring
-              fairness and clarity at every level.
+             To those who believe in the power of crypto, you're more than early adopters; you're pioneers of a new financial frontier. In a world moving towards decentralization, transparency, and freedom, you stand at the forefront, reshaping what currency means and how wealth can be built and shared. While others see volatility, you see potential – a vision of a future where people are empowered to transact, invest, and build independently of traditional financial constraints. Crypto is more than a technology; it's a movement, a declaration of independence from outdated systems. Together, as believers in this revolution, you're helping to redefine financial freedom, one block at a time.
             </p>
           </div>
           <img
