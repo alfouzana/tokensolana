@@ -6,18 +6,9 @@ const Footer = ({ setOpenContact, openContact }) => {
       <div class="container">
         <div class="footer-menu">
           <div class="copyright">
-            &copy; 2024 Web3.tools. All rights reserved.
+            &copy; 2024 CoinMaker.io All rights reserved.
           </div>
           <ul>
-            <li>
-              <a href="#privacy">Pricing</a>
-            </li>
-            <li>
-              <a href="#terms">Terms of Service</a>
-            </li>
-            <li>
-              <a href="#solana">Solana</a>
-            </li>
             <li>
               <a
                 onClick={() =>
