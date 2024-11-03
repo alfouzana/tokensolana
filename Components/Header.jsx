@@ -54,15 +54,6 @@ const Header = ({
             <a href="/">Home</a>
           </li>
           <li>
-            <a href="#solana">Solana</a>
-          </li>
-          <li>
-            <a href="#bitcon">Bitcoin</a>
-          </li>
-          <li>
-            <a href="/pricing">Pricing</a>
-          </li>
-          <li>
             <a
               onClick={() =>
                 openContact ? setOpenContact(false) : setOpenContact(true)
