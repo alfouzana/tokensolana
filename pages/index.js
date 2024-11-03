@@ -704,7 +704,7 @@ const index = () => {
         setAddress={setAddress}
       />
       <div className="content">
-        <div className="h1">Web3 Apps by @TBC</div>
+        <div className="h1">CoinMaker.io Web3</div>
         <div className="d1">
           Crypto, ERC20, ICO,
           {networkActive ? (
@@ -722,66 +722,6 @@ const index = () => {
         </div>
         <div className="line" />
         <div className="groups">
-          <div className="group vtools">
-            <div className="title">{networkActive?.chainName} Tools</div>
-            <div className="items">
-              {features?.map((tool, index) => (
-                <a
-                  className="item new"
-                  onClick={() =>
-                    tool.name == "Network Setup"
-                      ? setOpenNetworkModel(true)
-                      : tool.name == "Token Creator"
-                      ? setOpenTokenCreatorModel(true)
-                      : tool.name == "Token Balance"
-                      ? setOpenTokenBalace(true)
-                      : tool.name == "Token Explorer"
-                      ? setOpenTokenExplore(true)
-                      : tool.name == "Token Transfer"
-                      ? setOpenTokenTransfer(true)
-                      : tool.name == "ENS Name"
-                      ? setOpenENSFinder(true)
-                      : tool.name == "Contract ABI"
-                      ? setOpenontractABI(true)
-                      : tool.name == "Solidity Contract"
-                      ? setOpenSolidityContract(true)
-                      : tool.name == "Contract Owner"
-                      ? setOpenContractOwner(true)
-                      : tool.name == "Ethereum Price"
-                      ? setOpenEthereum(true)
-                      : tool.name == "Ethereum Address"
-                      ? setOpenEthereunWalletGenerator(true)
-                      : tool.name == "Add Token"
-                      ? setOpenAddToken(true)
-                      : tool.name == "ICO Creator"
-                      ? setOpenICOCreator(true)
-                      : tool.name == "ETH Transfer"
-                      ? setOpenTransferEther(true)
-                      : tool.name == "ICO Marketplace"
-                      ? setOpenTableModel(true)
-                      : tool.name == "Liqudity Finder"
-                      ? setOpenLiqudityFinder(true)
-                      : tool.name == "Add Network"
-                      ? setOpenAddNetwork(true)
-                      : tool.name == "QR Code Creator"
-                      ? setOpenQRCodeCreator(true)
-                      : tool.name == "ICO Address"
-                      ? setOpenICOAddress(true)
-                      : ""
-                  }
-                >
-                  {tool.new && (
-                    <div className="badge-overlay">
-                      <span className="badge"> New </span>
-                    </div>
-                  )}
-
-                  <div className={`img ${tool.image}`} />
-                  <div className="name">{tool.name}</div>
-                </a>
-              ))}
-            </div>
-          </div>
           <div id="solana" className="group atools">
             <div className="title">Solana Tools</div>
             <div className="items">
@@ -816,135 +756,6 @@ const index = () => {
               ))}
             </div>
           </div>
-          <div id="bitcon" className="group pdftools">
-            <div className="title">Bitcoin Tools</div>
-            <div className="items">
-              {BITCOIN?.map((tool, index) => (
-                <a
-                  className="item new"
-                  onClick={() =>
-                    tool.name == "BitCoin Wallet"
-                      ? setOpenBitCoinWallet(true)
-                      : tool.name == "QR Code Creator"
-                      ? setOpenQRCodeCreator(true)
-                      : ""
-                  }
-                >
-                  {tool.new && (
-                    <div className="badge-overlay">
-                      <span className="badge"> New </span>
-                    </div>
-                  )}
-
-                  <div className={`img ${tool.image}`} />
-                  <div className="name">{tool.name}</div>
-                </a>
-              ))}
-
-              {/* <a className="item" href="https://pdf.io/compress/">
-                <div className="img universe-pdf-compress" />
-                <div className="name">Compress</div>
-              </a>
-              <a className="item" href="https://pdf.io/unlock/">
-                <div className="img universe-pdf-unlock" />
-                <div className="name">Unlock</div>
-              </a>
-              <a className="item" href="https://pdf.io/protect/">
-                <div className="img universe-pdf-protect" />
-                <div className="name">Protect</div>
-              </a>
-              <a className="item" href="https://pdf.io/rotate/">
-                <div className="img universe-pdf-rotate" />
-                <div className="name">Rotate</div>
-              </a>
-              <a className="item" href="https://pdf.io/page-numbers/">
-                <div className="img universe-pdf-page-numbers" />
-                <div className="name">Add Page Numbers</div>
-              </a>
-              <a className="item" href="https://pdf.io/pdf2doc/">
-                <div className="img universe-pdf-pdf2doc" />
-                <div className="name">PDF to Word</div>
-              </a>
-              <a className="item" href="https://pdf.io/pdf2xls/">
-                <div className="img universe-pdf-pdf2xls" />
-                <div className="name">PDF to Excel</div>
-              </a>
-              <a className="item" href="https://pdf.io/pdf2jpg/">
-                <div className="img universe-pdf-pdf2jpg" />
-                <div className="name">PDF to JPG</div>
-              </a>
-              <a className="item" href="https://pdf.io/pdf2png/">
-                <div className="img universe-pdf-pdf2png" />
-                <div className="name">PDF to PNG</div>
-              </a>
-              <a className="item" href="https://pdf.io/pdf2html/">
-                <div className="img universe-pdf-pdf2html" />
-                <div className="name">PDF to HTML</div>
-              </a>
-              <a className="item" href="https://pdf.io/doc2pdf/">
-                <div className="img universe-pdf-doc2pdf" />
-                <div className="name">Word to PDF</div>
-              </a>
-              <a className="item" href="https://pdf.io/jpg2pdf/">
-                <div className="img universe-pdf-jpg2pdf" />
-                <div className="name">JPG to PDF</div>
-              </a>
-              <a className="item" href="https://pdf.io/xls2pdf/">
-                <div className="img universe-pdf-xls2pdf" />
-                <div className="name">Excel to PDF</div>
-              </a>
-              <a className="item" href="https://pdf.io/ppt2pdf/">
-                <div className="img universe-pdf-ppt2pdf" />
-                <div className="name">PPT to PDF</div>
-              </a>
-              <a className="item" href="https://pdf.io/png2pdf/">
-                <div className="img universe-pdf-png2pdf" />
-                <div className="name">PNG to PDF</div>
-              </a> */}
-            </div>
-          </div>
-          {/* <div className="group converters">
-            <div className="title">Converters</div>
-            <div className="items">
-              <a className="item" href="https://online-audio-converter.com/">
-                <div className="img universe-aconv" />
-                <div className="name">Audio Converter</div>
-              </a>
-              <a className="item" href="https://video-converter.com/">
-                <div className="img universe-vconv" />
-                <div className="name">Video Converter</div>
-              </a>
-              <a className="item" href="https://convert.io/image-converter">
-                <div className="img universe-convert-cimage" />
-                <div className="name">Image Converter</div>
-              </a>
-              <a className="item" href="https://convert.io/document-converter">
-                <div className="img universe-convert-cdocument" />
-                <div className="name">Document Converter</div>
-              </a>
-              <a className="item" href="https://convert.io/font-converter">
-                <div className="img universe-convert-cfont" />
-                <div className="name">Font Converter</div>
-              </a>
-              <a className="item" href="https://convert.io/archive-converter">
-                <div className="img universe-convert-carchive" />
-                <div className="name">Archive Converter</div>
-              </a>
-              <a className="item" href="https://convert.io/ebook-converter">
-                <div className="img universe-convert-cebook" />
-                <div className="name">Ebook Converter</div>
-              </a>
-            </div>
-          </div>
-          <div className="group utils">
-            <div className="title">Utilities</div>
-            <div className="items">
-              <a className="item" href="https://extract.me/">
-                <div className="img universe-unarchiver" />
-                <div className="name">Archive Extractor</div>
-              </a>
-            </div>
-          </div> */}
         </div>
       </div>
       {openNetworkModel && (
