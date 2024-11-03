@@ -42,7 +42,7 @@ const Header = ({
       <nav>
         <div class="logo">
           <a href="/">
-            Web3.<span>Tools</span>
+            Coin<span>Maker.io</span>
           </a>
         </div>
         <input type="checkbox" id="menu-toggle" />
