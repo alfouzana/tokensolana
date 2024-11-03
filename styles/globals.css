@@ -1701,6 +1701,7 @@ body > .footer .menu button:hover {
   line-height: 1;
   margin-bottom: 11px;
   letter-spacing: -2px;
+  color:#fff;
 }
 
 .content .h1 .highlight {
@@ -1710,6 +1711,7 @@ body > .footer .menu button:hover {
 .content .d1 {
   font-size: 20px;
   font-weight: 400;
+  color:#fff;
 }
 
 .content .d1 .icon {
@@ -1746,6 +1748,7 @@ body > .footer .menu button:hover {
   position: relative;
   font-size: 32px;
   font-weight: 600;
+  color:#fff;
   padding-left: 2px;
 }
 
@@ -1761,9 +1764,9 @@ body > .footer .menu button:hover {
   z-index: 5;
   position: relative;
   text-align: center;
-  background-color: #f7f9fa;
+  background-color: #1D1D1D;
   box-sizing: border-box;
-  color: #000;
+  color: #fff;
   text-decoration: none;
   border-radius: 10px;
   padding-top: 15px;
