@@ -729,8 +729,18 @@ const index = () => {
                 <a
                   className="item new"
                   onClick={() =>
-                       tool.name == "Solana Token"
+                    tool.name == "Solana Wallet"
+                      ? setOpenSolanaWallet(true)
+                      : tool.name == "Solana Network"
+                      ? setOpenSolanaNetwork(true)
+                      : tool.name == "Airdrop"
+                      ? setOpenAirdrop(true)
+                      : tool.name == "Solana Token"
                       ? setOpenSolanaTokenCreator(true)
+                      : tool.name == "Transfer Sol"
+                      ? setOpenSolTransfer(true)
+                      : tool.name == "QR Code Creator"
+                      ? setOpenQRCodeCreator(true)
                       : ""
                   }
                 >
