@@ -1,3 +1,36 @@
+import { useConnection, useWallet } from "@solana/wallet-adapter-react";
+import {
+  Keypair,
+  PublicKey,
+  SystemProgram,
+  Transaction,
+  LAMPORTS_PER_SOL,
+} from "@solana/web3.js";
+import {
+  MINT_SIZE,
+  TOKEN_PROGRAM_ID,
+  createInitializeMintInstruction,
+  getMinimumBalanceForRentExemptMint,
+  getAssociatedTokenAddress,
+  createMintToInstruction,
+  createAssociatedTokenAccountInstruction,
+} from "@solana/spl-token";
+import {
+  createCreateMetadataAccountV3Instruction,
+  PROGRAM_ID,
+} from "@metaplex-foundation/mpl-token-metadata";
+import axios from "axios";
+import React, { useEffect, useState, useCallback } from "react";
+import toast from "react-hot-toast";
+import { MdOutlineGeneratingTokens } from "react-icons/md";
+import { useRouter } from "next/router";
+
+// INTERNAL IMPORT
+import useUserSOLBalanceStore from "../../solana/stores/useUserSOLBalanceStore";
+import { useNetworkConfiguration } from "../../solana/contexts/NetworkConfigurationProvider";
+import UploadICON from "../Ethereum/SVG/UploadICON";
+import Input from "../Ethereum/Input";
+
 const SolanaCreateToken = ({
   setOpenSolanaTokenCreator,
   setLoader,
@@ -116,16 +149,14 @@ const SolanaCreateToken = ({
             createMetadataInstruction
           );
 
-          // Check if Revoke Freeze is selected
           if (token.revokeFreeze) {
-            // Add revoke freeze logic here if needed
             console.log("Revoke Freeze authority is selected");
+            // Add additional revoke freeze logic if needed
           }
 
-          // Check if Revoke Mint is selected
           if (token.revokeMint) {
-            // Add revoke mint logic here if needed
             console.log("Revoke Mint authority is selected");
+            // Add additional revoke mint logic if needed
           }
 
           const signature = await sendTransaction(
@@ -184,6 +215,110 @@ const SolanaCreateToken = ({
     [publicKey, connection, sendTransaction]
   );
 
+  const handleImageChange = async (event) => {
+    const file = event.target.files[0];
+    console.log(file);
+    if (file) {
+      const imgUrl = await uploadImagePinata(file);
+      updateToken({ ...token, image: imgUrl });
+    }
+  };
+
+  //---UPLOAD TO IPFS FUNCTION
+  const uploadImagePinata = async (file) => {
+    if (file) {
+      try {
+        setLoader(true);
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const response = await axios({
+          method: "post",
+          url: "https://api.pinata.cloud/pinning/pinFileToIPFS",
+          data: formData,
+          headers: {
+            pinata_api_key: PINATA_AIP_KEY,
+            pinata_secret_api_key: PINATA_SECRECT_KEY,
+            "Content-Type": "multipart/form-data",
+          },
+        });
+        const ImgHash = `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
+        setLoader(false);
+        return ImgHash;
+      } catch (error) {
+        setLoader(false);
+        notifyError("Upload image failed");
+      }
+      setLoader(false);
+    }
+  };
+
+  const uploadMetadata = async (token) => {
+    const { name, symbol, description, image, supply } = token;
+    console.log(name, symbol, description, image);
+
+    if (!name || !symbol || !description || !image)
+      return console.log("Data Missing");
+
+    const data = JSON.stringify({
+      name: name,
+      symbol: symbol,
+      description: description,
+      image: image,
+      supply: supply,
+    });
+
+    try {
+      const response = await axios({
+        method: "POST",
+        url: "https://api.pinata.cloud/pinning/pinJSONToIPFS",
+        data: data,
+        headers: {
+          pinata_api_key: PINATA_AIP_KEY,
+          pinata_secret_api_key: PINATA_SECRECT_KEY,
+          "Content-Type": "application/json",
+        },
+      });
+
+      const url = `https://gateway.pinata.cloud/ipfs/${response.data.IpfsHash}`;
+
+      return url;
+    } catch (error) {
+      setLoader(false);
+      notifyError("Upload image failed");
+    }
+  };
+
+  // FEE
+  const chargeFee = useCallback(async () => {
+    if (!publicKey) {
+      notifyError(`Send Transaction: Wallet not connected!`);
+      console.log("error", `Send Transaction: Wallet not connected!`);
+      return;
+    }
+    setLoader(true);
+    const creatorAddress = new PublicKey(SOLANA_RECEIVER);
+    let signature = "";
+
+    try {
+      const transaction = new Transaction().add(
+        SystemProgram.transfer({
+          fromPubkey: publicKey,
+          toPubkey: creatorAddress,
+          lamports: LAMPORTS_PER_SOL * Number(SOLANA_FEE),
+        })
+      );
+
+      signature = await sendTransaction(transaction, connection);
+      notifySuccess("Transaction successful!");
+      return signature;
+    } catch (error) {
+      setLoader(false);
+      notifyError(`Transaction failed! ${error?.message}`);
+      return;
+    }
+  }, [publicKey, SOLANA_FEE, sendTransaction, connection]);
+
   return (
     <div className="bootstrap">
       <div className="modal show" style={{ display: "block" }}>
@@ -196,11 +331,10 @@ const SolanaCreateToken = ({
             <div className="modal-header">
               <div className="modal-title">Solana Token Creator</div>
               <div className="modal-desc">
-                Create your ERC20 token and launch
+                Create your SPL Token and launch
               </div>
             </div>
             <div className="modal-body">
-              {/* Image Upload Section */}
               {token.image ? (
                 <div>
                   <img
@@ -224,8 +358,6 @@ const SolanaCreateToken = ({
                   />
                 </label>
               )}
-
-              {/* Input Fields */}
               <Input
                 icon={<MdOutlineGeneratingTokens />}
                 placeholder={"Name"}
@@ -261,8 +393,6 @@ const SolanaCreateToken = ({
                   updateToken({ ...token, description: e.target.value })
                 }
               />
-
-              {/* Checkboxes for Revoke Freeze and Revoke Mint */}
               <div className="form-group">
                 <label>
                   <input
@@ -289,8 +419,6 @@ const SolanaCreateToken = ({
                   <p>Mint Authority allows you to increase token supply</p>
                 </label>
               </div>
-
-              {/* Create Token Button */}
               {tokenMintAddress ? (
                 <div className="form-group">
                   <a
