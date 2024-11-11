@@ -1,54 +1,30 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect } from "react";
 import { useRouter } from "next/router";
+import { useWallet } from "@solana/wallet-adapter-react";
+import { WalletMultiButton } from "@solana/wallet-adapter-react-ui";
+
+// Ensure you import styles for WalletMultiButton to appear correctly
+import "@solana/wallet-adapter-react-ui/styles.css";
 
 //IMPORT
 import Button from "./Ethereum/Button";
 
 const Header = ({
-  connectWallet,
-  address,
-  shortenAddress,
-  accountBalance,
   setOpenContact,
   openContact,
   setAddress,
 }) => {
-  const [isPhantomInstalled, setIsPhantomInstalled] = useState(false);
+  const { connected, publicKey } = useWallet();
+  const router = useRouter();
 
   useEffect(() => {
-    if (typeof window.solana !== "undefined" && window.solana.isPhantom) {
-      setIsPhantomInstalled(true);
-
-      // Automatically connect if Phantom is already authorized
-      window.solana.on("connect", (publicKey) => {
-        handleConnect(publicKey);
-      });
-
-      window.solana.on("disconnect", handleDisconnect);
-    }
-
-    return () => {
-      if (typeof window.solana !== "undefined" && window.solana.isPhantom) {
-        window.solana.removeListener("connect", handleConnect);
-        window.solana.removeListener("disconnect", handleDisconnect);
-      }
-    };
-  }, [address]);
-
-  const handleConnect = async () => {
-    try {
-      const { publicKey } = await window.solana.connect();
+    if (connected && publicKey) {
       setAddress(publicKey.toString());
-    } catch (error) {
-      console.error("Connection to Phantom wallet failed", error);
+    } else {
+      setAddress(null);
     }
-  };
+  }, [connected, publicKey, setAddress]);
 
-  const handleDisconnect = () => {
-    setAddress(null);
-  };
-
-  const router = useRouter();
   return (
     <header className="header">
       <nav>
@@ -74,20 +50,18 @@ const Header = ({
               Contact
             </a>
           </li>
-          {address ? (
+          {connected ? (
             <li>
               <Button
-                name={`${shortenAddress(address)} `}
+                name={`${publicKey.toString().slice(0, 4)}...${publicKey
+                  .toString()
+                  .slice(-4)}`}
                 handleClick={() => router.push(`/profile`)}
               />
             </li>
           ) : (
             <li>
-              {isPhantomInstalled ? (
-                <Button handleClick={handleConnect} name="Connect Wallet" />
-              ) : (
-                <span>Please install Phantom Wallet</span>
-              )}
+              <WalletMultiButton />
             </li>
           )}
         </ul>
