@@ -13,43 +13,55 @@ const Header = ({
   openContact,
   setAddress,
 }) => {
-  const [isMetaMaskInstalled, setIsMetaMaskInstalled] = useState(false);
+  const [isPhantomInstalled, setIsPhantomInstalled] = useState(false);
 
   useEffect(() => {
-    if (typeof window.ethereum !== "undefined") {
-      setIsMetaMaskInstalled(true);
+    if (typeof window.solana !== "undefined" && window.solana.isPhantom) {
+      setIsPhantomInstalled(true);
 
-      window.ethereum.on("accountsChanged", handleAccountsChanged);
+      // Automatically connect if Phantom is already authorized
+      window.solana.on("connect", (publicKey) => {
+        handleConnect(publicKey);
+      });
+
+      window.solana.on("disconnect", handleDisconnect);
     }
 
     return () => {
-      if (typeof window.ethereum !== "undefined") {
-        window.ethereum.removeListener(
-          "accountsChanged",
-          handleAccountsChanged
-        );
+      if (typeof window.solana !== "undefined" && window.solana.isPhantom) {
+        window.solana.removeListener("connect", handleConnect);
+        window.solana.removeListener("disconnect", handleDisconnect);
       }
     };
   }, [address]);
 
-  const handleAccountsChanged = (accounts) => {
-    console.log("Accounts changed:", accounts[0]);
-    setAddress(accounts[0]);
+  const handleConnect = async () => {
+    try {
+      const { publicKey } = await window.solana.connect();
+      setAddress(publicKey.toString());
+    } catch (error) {
+      console.error("Connection to Phantom wallet failed", error);
+    }
   };
+
+  const handleDisconnect = () => {
+    setAddress(null);
+  };
+
   const router = useRouter();
   return (
-    <header class="header">
+    <header className="header">
       <nav>
-        <div class="logo">
+        <div className="logo">
           <a href="/">
             Coin<span>Maker.io</span>
           </a>
         </div>
         <input type="checkbox" id="menu-toggle" />
-        <label for="menu-toggle" class="menu-icon">
+        <label htmlFor="menu-toggle" className="menu-icon">
           &#9776;
         </label>
-        <ul class="menu">
+        <ul className="menu">
           <li>
             <a href="/">Home</a>
           </li>
@@ -71,7 +83,11 @@ const Header = ({
             </li>
           ) : (
             <li>
-              <Button handleClick={connectWallet} name="Connect Wallet" />
+              {isPhantomInstalled ? (
+                <Button handleClick={handleConnect} name="Connect Wallet" />
+              ) : (
+                <span>Please install Phantom Wallet</span>
+              )}
             </li>
           )}
         </ul>
